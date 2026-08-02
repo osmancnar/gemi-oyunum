@@ -4620,6 +4620,7 @@ function syncMyPosition(now){
 
   myPlayerRef.update({
     username: currentUsername,
+    online: true,
     x: Math.round(player.x),
     y: Math.round(player.y),
     angle: player.angle,
