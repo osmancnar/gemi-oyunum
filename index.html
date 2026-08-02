@@ -4259,8 +4259,11 @@ document.getElementById('authPassword').addEventListener('keydown', (e)=>{ if(e.
 document.getElementById('authPasswordConfirm').addEventListener('keydown', (e)=>{ if(e.key==='Enter') submitAuthForm(); });
 
 async function loadProgressFromFirestore(uid){
+ console.log("LOAD ÇALIŞTI", uid);
   try{
     const doc = await db.collection('players').doc(uid).get();
+    console.log("DOC EXISTS:", doc.exists);
+    console.log("DOC DATA:", doc.data());
     if(doc.exists){
       const data = doc.data();
 
