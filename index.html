@@ -4241,15 +4241,7 @@ async function submitAuthForm(){
     } else {
       await auth.signInWithEmailAndPassword(email, password);
 
-const user = auth.currentUser;
-console.log("========== LOGIN OK ==========");
-console.log("UID:", user?.uid);
-console.log("EMAIL:", user?.email);
-console.log("USERNAME:", currentUsername);
-console.log("==============================");
-
 } catch(e){
-  console.error(e);
   errEl.textContent = translateAuthError(e.code);
 }
 document.getElementById('authSubmitBtn').addEventListener('click', submitAuthForm);
