@@ -4565,8 +4565,17 @@ let lastSyncT = 0;
 
 let mpErrorShown = false;
 function startMultiplayerSync(){
+
   if(!currentUser) return;
+
+  // Eski bağlantıyı tamamen temizle
+  if(myPlayerRef){
+    myPlayerRef.off();
+    myPlayerRef = null;
+  }
+
   myPlayerRef = rtdb.ref(roomBase() + '/players/' + currentUser.uid);
+
   myPlayerRef.onDisconnect().remove();
   rtdb.ref(roomBase() + '/players').on('value', snap=>{
     otherPlayers = snap.val() || {};
