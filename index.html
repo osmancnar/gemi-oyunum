@@ -4395,11 +4395,20 @@ async function loadProgressFromFirestore(uid){
       // sorgulanıyor (bkz. loadMyFleetId).
     }
   } catch(e){ console.warn('Firestore okuma hatası:', e); }
-  const nameEl = document.getElementById('pname');
-  if(nameEl) nameEl.textContent = (currentUsername || '').toUpperCase();
-  if(typeof updateTopBarBattleRankBadge === 'function') updateTopBarBattleRankBadge();
-  if(typeof updateZipkinPickerLabel === 'function') updateZipkinPickerLabel();
-  if(typeof updateRepairInfinityIndicator === 'function') updateRepairInfinityIndicator();
+const nameEl = document.getElementById('pname');
+
+if(nameEl){
+  nameEl.textContent = (currentUsername || '').toUpperCase();
+}
+
+// Oyuncu gemisi zaten oluşturulduysa adını da güncelle
+if(player){
+  player.name = (currentUsername || '').toUpperCase();
+}
+
+if(typeof updateTopBarBattleRankBadge === 'function') updateTopBarBattleRankBadge();
+if(typeof updateZipkinPickerLabel === 'function') updateZipkinPickerLabel();
+if(typeof updateRepairInfinityIndicator === 'function') updateRepairInfinityIndicator();
 }
 
 function saveProgress(){
