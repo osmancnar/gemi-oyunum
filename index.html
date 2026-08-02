@@ -4608,12 +4608,6 @@ function syncMyPosition(now){
   if(now - lastSyncT < 150) return;
   lastSyncT = now;
 
-  console.log("SYNC DEBUG", {
-    uid: currentUser?.uid,
-    username: currentUsername,
-    room: roomBase()
-  });
-
   myPlayerRef.update({
     username: currentUsername,
     x: Math.round(player.x),
