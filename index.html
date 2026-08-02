@@ -4265,6 +4265,11 @@ async function loadProgressFromFirestore(uid){
     console.log("DOC EXISTS:", doc.exists);
     console.log("DOC DATA:", doc.data());
     if(doc.exists){
+     alert("Oyuncu verisi bulunamadı. Lütfen tekrar kayıt olun.");
+
+    await auth.signOut();
+    return false;
+}
       const data = doc.data();
 
       currentUsername = data.username || '';
@@ -4726,12 +4731,15 @@ function updateOtherPlayersAndDrawHUD(){
 }
 
 auth.onAuthStateChanged(async (user)=>{
-  if(user){
+if(user){
     currentUser = user;
-    await loadProgressFromFirestore(user.uid);
 
-    if(pendingRestoreRow !== null && pendingRestoreCol !== null && (pendingRestoreRow!==mapRow || pendingRestoreCol!==mapCol)){
-      loadMapWorldOnly(pendingRestoreRow, pendingRestoreCol);
+    const ok = await loadProgressFromFirestore(user.uid);
+
+    if(!ok){
+        alert("Oyuncu verisi bulunamadı. Lütfen tekrar giriş yapın veya yeniden kayıt olun.");
+        await auth.signOut();
+        return;
     }
 
     if(pendingRestoreX !== null && pendingRestoreY !== null){
