@@ -4394,11 +4394,6 @@ async function loadProgressFromFirestore(uid){
 
 function saveProgress(){
 
-  console.log("SAVE DEBUG", {
-    uid: currentUser?.uid,
-    username: currentUsername
-  });
-
   if(!currentUser) return;
 
   db.collection('players').doc(currentUser.uid).set({
@@ -4686,13 +4681,6 @@ function updateOtherPlayersAndDrawHUD(){
 }
 
 auth.onAuthStateChanged(async (user)=>{
-
-  console.log("========== AUTH CHANGED ==========");
-  console.log("UID:", user ? user.uid : null);
-  console.log("EMAIL:", user ? user.email : null);
-  console.log("currentUsername:", currentUsername);
-  console.log("==================================");
-
   if(user){
     currentUser = user;
     await loadProgressFromFirestore(user.uid);
