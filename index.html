@@ -4249,6 +4249,7 @@ async function submitAuthForm(){
 }
  console.log("AUTH EVENT BAĞLANIYOR");
 document.getElementById('authSubmitBtn').addEventListener('click', submitAuthForm);
+ console.log("AUTH BUTON BAĞLANDI");
 document.getElementById('authPassword').addEventListener('keydown', (e)=>{ if(e.key==='Enter') submitAuthForm(); });
 document.getElementById('authPasswordConfirm').addEventListener('keydown', (e)=>{ if(e.key==='Enter') submitAuthForm(); });
 
