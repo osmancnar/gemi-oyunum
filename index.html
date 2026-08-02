@@ -4208,9 +4208,6 @@ document.getElementById('authToggleBtn').addEventListener('click', ()=>{
 });
 
 async function submitAuthForm(){
-
-  console.log("GİRİŞ BUTONUNA BASILDI");
-
   const username = document.getElementById('authUsername').value.trim();
   const password = document.getElementById('authPassword').value;
   const errEl = document.getElementById('authError');
@@ -4241,45 +4238,25 @@ async function submitAuthForm(){
       await db.collection('players').doc(cred.user.uid).set({
         username, gold:0, cannons:25, cannonStock:0, selectedClassIndex:0, totalHits:0
       });
-     } else {
+    } else {
       await auth.signInWithEmailAndPassword(email, password);
     }
-
   } catch(e){
-    console.error("AUTH HATA:", e);
     errEl.textContent = translateAuthError(e.code);
   }
-
   btn.disabled = false;
 }
- console.log("AUTH EVENT BAĞLANIYOR");
+
 document.getElementById('authSubmitBtn').addEventListener('click', submitAuthForm);
- console.log("AUTH BUTON BAĞLANDI");
 document.getElementById('authPassword').addEventListener('keydown', (e)=>{ if(e.key==='Enter') submitAuthForm(); });
 document.getElementById('authPasswordConfirm').addEventListener('keydown', (e)=>{ if(e.key==='Enter') submitAuthForm(); });
 
 async function loadProgressFromFirestore(uid){
- console.log("LOAD ÇALIŞTI", uid);
-
-try{
+  try{
     const doc = await db.collection('players').doc(uid).get();
-
-    if(!doc.exists){
-        alert("Oyuncu verisi bulunamadı. Lütfen tekrar kayıt olun.");
-        await auth.signOut();
-        return false
-}
+    if(doc.exists){
       const data = doc.data();
-
       currentUsername = data.username || '';
-
-      console.log("========== FIRESTORE ==========");
-      console.log("UID:", uid);
-      console.log("Firestore username:", data.username);
-      console.log("currentUsername:", currentUsername);
-      console.log("Tüm veri:", data);
-      console.log("===============================");
-
       if(typeof data.gold === 'number') gold = data.gold;
       if(typeof data.cannons === 'number') cannons = data.cannons;
       if(typeof data.cannonStock === 'number') cannonStock = data.cannonStock;
@@ -4410,77 +4387,22 @@ try{
       // ortadan kaldırmak için filo üyeliği fleets koleksiyonundan
       // sorgulanıyor (bkz. loadMyFleetId).
     }
-  } catch(e){ console.warn('Firestore okuma hatası:', e); } }
-const nameEl = document.getElementById('pname');
-
-if(nameEl){
-  nameEl.textContent = (currentUsername || '').toUpperCase();
-}
-
-// Oyuncu gemisi zaten oluşturulduysa adını da güncelle
-if(player){
-  player.name = (currentUsername || '').toUpperCase();
-}
-
-if(typeof updateTopBarBattleRankBadge === 'function') updateTopBarBattleRankBadge();
-if(typeof updateZipkinPickerLabel === 'function') updateZipkinPickerLabel();
-if(typeof updateRepairInfinityIndicator === 'function') updateRepairInfinityIndicator();
+  } catch(e){ console.warn('Firestore okuma hatası:', e); }
+  const nameEl = document.getElementById('pname');
+  if(nameEl) nameEl.textContent = (currentUsername || '').toUpperCase();
+  if(typeof updateTopBarBattleRankBadge === 'function') updateTopBarBattleRankBadge();
+  if(typeof updateZipkinPickerLabel === 'function') updateZipkinPickerLabel();
+  if(typeof updateRepairInfinityIndicator === 'function') updateRepairInfinityIndicator();
 }
 
 function saveProgress(){
-
   if(!currentUser) return;
-
   db.collection('players').doc(currentUser.uid).set({
-    gold,
-    cannons,
-    cannonStock,
-    selectedClassIndex,
-    totalHits,
-    totalScore,
-    totalKills,
-    username: currentUsername,
-    ammoStock,
-    hotbarSlots,
-    activeAmmoType,
-    speedBoostStock,
-    mojuoStock,
-    bonusMapProgress,
-    bonusMapBankedCount,
-    mojuoLootHistory,
-    helperCaptainSecondsUsedToday,
-    helperCaptainLastResetDay,
-    settingsPrefs,
-    totalBossKills,
-    waveDefenseCurrentWave,
-    waveDefenseWaveByMap,
-    waveDefenseSecondsUsedToday,
-    waveDefenseLastResetDay,
-    barutStock,
-    zirhStock,
-    roketStock,
-    zipkinGumusStock,
-    zipkinAltinStock,
-    activeZipkinType,
-    zipkinAtarStock,
-    zipkinAtarCount,
-    permanentMaxHpBonus,
-    activeItems,
-    selectedShipSkin,
-    barutActive,
-    zirhActive,
-    repairAutoActive,
-    mapRow,
-    mapCol,
-    mapGridVersion: 2,
-    lastX: player ? player.x : WORLD_W/2,
-    lastY: player ? player.y : WORLD_H/2,
-    level,
-    questProgress,
-    normalQuestProgress,
-    fixedQuests,
-    fixedQuestNextAt
-  }, { merge: true }).catch(e => console.warn('Firestore yazma hatası:', e));
+    gold, cannons, cannonStock, selectedClassIndex, totalHits, totalScore, totalKills, username: currentUsername, ammoStock, hotbarSlots, activeAmmoType, speedBoostStock, mojuoStock, bonusMapProgress, bonusMapBankedCount, mojuoLootHistory, helperCaptainSecondsUsedToday, helperCaptainLastResetDay, settingsPrefs, totalBossKills,
+    waveDefenseCurrentWave, waveDefenseWaveByMap, waveDefenseSecondsUsedToday, waveDefenseLastResetDay, barutStock, zirhStock, roketStock, zipkinGumusStock, zipkinAltinStock, activeZipkinType, zipkinAtarStock, zipkinAtarCount, permanentMaxHpBonus, activeItems, selectedShipSkin, barutActive, zirhActive, repairAutoActive,
+    mapRow, mapCol, mapGridVersion: 2, lastX: player ? player.x : WORLD_W/2, lastY: player ? player.y : WORLD_H/2,
+    level, questProgress, normalQuestProgress, fixedQuests, fixedQuestNextAt
+  }, {merge:true}).catch(e => console.warn('Firestore yazma hatası:', e));
 }
 
 let logoutTimer = null;
@@ -4590,17 +4512,8 @@ let lastSyncT = 0;
 
 let mpErrorShown = false;
 function startMultiplayerSync(){
-
   if(!currentUser) return;
-
-  // Eski bağlantıyı tamamen temizle
-  if(myPlayerRef){
-    myPlayerRef.off();
-    myPlayerRef = null;
-  }
-
   myPlayerRef = rtdb.ref(roomBase() + '/players/' + currentUser.uid);
-
   myPlayerRef.onDisconnect().remove();
   rtdb.ref(roomBase() + '/players').on('value', snap=>{
     otherPlayers = snap.val() || {};
@@ -4630,17 +4543,7 @@ function startMultiplayerSync(){
 function stopMultiplayerSync(){
   rtdb.ref(roomBase() + '/players').off();
   rtdb.ref(roomBase() + '/enemies').off();
-  if(myPlayerRef){ 
-  myPlayerRef.update({
-    online: false,
-    ts: Date.now()
-  }).catch(e=>{
-    console.error('RTDB offline güncelleme hatası:', e);
-  });
-
-  myPlayerRef.off();
-  myPlayerRef = null;
-}
+  if(myPlayerRef){ myPlayerRef.remove().catch(e=>console.error('RTDB silme hatası:', e)); myPlayerRef.off(); myPlayerRef = null; }
   otherPlayers = {};
   otherPlayersRender = {};
   sharedEnemyState = {};
@@ -4651,23 +4554,15 @@ function syncMyPosition(now){
   if(!myPlayerRef || !player || !gameStarted) return;
   if(now - lastSyncT < 150) return;
   lastSyncT = now;
-
   myPlayerRef.update({
     username: currentUsername,
-    online: true,
-    x: Math.round(player.x),
-    y: Math.round(player.y),
-    angle: player.angle,
-    hp: Math.round(player.hp),
-    maxHp: player.maxHp,
+    x: Math.round(player.x), y: Math.round(player.y), angle: player.angle,
+    hp: Math.round(player.hp), maxHp: player.maxHp,
     className: player.className,
     ts: Date.now()
   }).catch(err=>{
     console.error('Realtime Database yazma hatası:', err);
-    if(!mpErrorShown){
-      mpErrorShown = true;
-      logMsg('Konum gönderilemedi: ' + err.message, 'dead');
-    }
+    if(!mpErrorShown){ mpErrorShown = true; logMsg('Konum gönderilemedi: ' + err.message, 'dead'); }
   });
 }
 
@@ -4730,21 +4625,21 @@ function updateOtherPlayersAndDrawHUD(){
 }
 
 auth.onAuthStateChanged(async (user)=>{
-if(user){
+  if(user){
     currentUser = user;
     await loadProgressFromFirestore(user.uid);
-
+    // Kayıtlı harita, varsayılan (1/1, dünya merkezi) haritadan farklıysa,
+    // initGame() zaten kurduğu varsayılan dünyayı bırakıp kayıtlı haritayı
+    // yeniden kuruyoruz; sonra gemiyi tam kaydedilen konuma koyuyoruz —
+    // harita ortasına değil, kaldığın yere.
     if(pendingRestoreRow !== null && pendingRestoreCol !== null && (pendingRestoreRow!==mapRow || pendingRestoreCol!==mapCol)){
-        loadMapWorldOnly(pendingRestoreRow, pendingRestoreCol);
+      loadMapWorldOnly(pendingRestoreRow, pendingRestoreCol);
     }
-
     if(pendingRestoreX !== null && pendingRestoreY !== null){
-        player.x = clamp(pendingRestoreX, 15, WORLD_W-15);
-        player.y = clamp(pendingRestoreY, 15, WORLD_H-15);
-        camTarget.x = player.x;
-        camTarget.z = player.y;
+      player.x = clamp(pendingRestoreX, 15, WORLD_W-15);
+      player.y = clamp(pendingRestoreY, 15, WORLD_H-15);
+      camTarget.x = player.x; camTarget.z = player.y;
     }
-
     if(typeof renderHotbar === 'function') renderHotbar();
     loadMyFleetId();
     checkMyAuctionWins();
