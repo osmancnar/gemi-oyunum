@@ -4208,6 +4208,9 @@ document.getElementById('authToggleBtn').addEventListener('click', ()=>{
 });
 
 async function submitAuthForm(){
+
+  console.log("GİRİŞ BUTONUNA BASILDI");
+
   const username = document.getElementById('authUsername').value.trim();
   const password = document.getElementById('authPassword').value;
   const errEl = document.getElementById('authError');
