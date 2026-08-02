@@ -4263,7 +4263,16 @@ async function loadProgressFromFirestore(uid){
     const doc = await db.collection('players').doc(uid).get();
     if(doc.exists){
       const data = doc.data();
+
       currentUsername = data.username || '';
+
+      console.log("========== FIRESTORE ==========");
+      console.log("UID:", uid);
+      console.log("Firestore username:", data.username);
+      console.log("currentUsername:", currentUsername);
+      console.log("Tüm veri:", data);
+      console.log("===============================");
+
       if(typeof data.gold === 'number') gold = data.gold;
       if(typeof data.cannons === 'number') cannons = data.cannons;
       if(typeof data.cannonStock === 'number') cannonStock = data.cannonStock;
