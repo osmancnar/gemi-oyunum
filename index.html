@@ -4554,15 +4554,28 @@ function syncMyPosition(now){
   if(!myPlayerRef || !player || !gameStarted) return;
   if(now - lastSyncT < 150) return;
   lastSyncT = now;
+
+  console.log("SYNC DEBUG", {
+    uid: currentUser?.uid,
+    username: currentUsername,
+    room: roomBase()
+  });
+
   myPlayerRef.update({
     username: currentUsername,
-    x: Math.round(player.x), y: Math.round(player.y), angle: player.angle,
-    hp: Math.round(player.hp), maxHp: player.maxHp,
+    x: Math.round(player.x),
+    y: Math.round(player.y),
+    angle: player.angle,
+    hp: Math.round(player.hp),
+    maxHp: player.maxHp,
     className: player.className,
     ts: Date.now()
   }).catch(err=>{
     console.error('Realtime Database yazma hatası:', err);
-    if(!mpErrorShown){ mpErrorShown = true; logMsg('Konum gönderilemedi: ' + err.message, 'dead'); }
+    if(!mpErrorShown){
+      mpErrorShown = true;
+      logMsg('Konum gönderilemedi: ' + err.message, 'dead');
+    }
   });
 }
 
