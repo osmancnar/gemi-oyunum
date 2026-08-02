@@ -4241,11 +4241,16 @@ async function submitAuthForm(){
       await db.collection('players').doc(cred.user.uid).set({
         username, gold:0, cannons:25, cannonStock:0, selectedClassIndex:0, totalHits:0
       });
-    } else {
+     } else {
       await auth.signInWithEmailAndPassword(email, password);
+    }
 
-} catch(e){
-  errEl.textContent = translateAuthError(e.code);
+  } catch(e){
+    console.error("AUTH HATA:", e);
+    errEl.textContent = translateAuthError(e.code);
+  }
+
+  btn.disabled = false;
 }
  console.log("AUTH EVENT BAĞLANIYOR");
 document.getElementById('authSubmitBtn').addEventListener('click', submitAuthForm);
