@@ -4396,13 +4396,64 @@ async function loadProgressFromFirestore(uid){
 }
 
 function saveProgress(){
+
+  console.log("SAVE DEBUG", {
+    uid: currentUser?.uid,
+    username: currentUsername
+  });
+
   if(!currentUser) return;
+
   db.collection('players').doc(currentUser.uid).set({
-    gold, cannons, cannonStock, selectedClassIndex, totalHits, totalScore, totalKills, username: currentUsername, ammoStock, hotbarSlots, activeAmmoType, speedBoostStock, mojuoStock, bonusMapProgress, bonusMapBankedCount, mojuoLootHistory, helperCaptainSecondsUsedToday, helperCaptainLastResetDay, settingsPrefs, totalBossKills,
-    waveDefenseCurrentWave, waveDefenseWaveByMap, waveDefenseSecondsUsedToday, waveDefenseLastResetDay, barutStock, zirhStock, roketStock, zipkinGumusStock, zipkinAltinStock, activeZipkinType, zipkinAtarStock, zipkinAtarCount, permanentMaxHpBonus, activeItems, selectedShipSkin, barutActive, zirhActive, repairAutoActive,
-    mapRow, mapCol, mapGridVersion: 2, lastX: player ? player.x : WORLD_W/2, lastY: player ? player.y : WORLD_H/2,
-    level, questProgress, normalQuestProgress, fixedQuests, fixedQuestNextAt
-  }, {merge:true}).catch(e => console.warn('Firestore yazma hatası:', e));
+    gold,
+    cannons,
+    cannonStock,
+    selectedClassIndex,
+    totalHits,
+    totalScore,
+    totalKills,
+    username: currentUsername,
+    ammoStock,
+    hotbarSlots,
+    activeAmmoType,
+    speedBoostStock,
+    mojuoStock,
+    bonusMapProgress,
+    bonusMapBankedCount,
+    mojuoLootHistory,
+    helperCaptainSecondsUsedToday,
+    helperCaptainLastResetDay,
+    settingsPrefs,
+    totalBossKills,
+    waveDefenseCurrentWave,
+    waveDefenseWaveByMap,
+    waveDefenseSecondsUsedToday,
+    waveDefenseLastResetDay,
+    barutStock,
+    zirhStock,
+    roketStock,
+    zipkinGumusStock,
+    zipkinAltinStock,
+    activeZipkinType,
+    zipkinAtarStock,
+    zipkinAtarCount,
+    permanentMaxHpBonus,
+    activeItems,
+    selectedShipSkin,
+    barutActive,
+    zirhActive,
+    repairAutoActive,
+    mapRow,
+    mapCol,
+    mapGridVersion: 2,
+    lastX: player ? player.x : WORLD_W/2,
+    lastY: player ? player.y : WORLD_H/2,
+    level,
+    questProgress,
+    normalQuestProgress,
+    fixedQuests,
+    fixedQuestNextAt
+  }, { merge: true }).catch(e => console.warn('Firestore yazma hatası:', e));
 }
 
 let logoutTimer = null;
