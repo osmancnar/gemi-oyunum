@@ -4260,15 +4260,14 @@ document.getElementById('authPasswordConfirm').addEventListener('keydown', (e)=>
 
 async function loadProgressFromFirestore(uid){
  console.log("LOAD ÇALIŞTI", uid);
-  try{
-    const doc = await db.collection('players').doc(uid).get();
-    console.log("DOC EXISTS:", doc.exists);
-    console.log("DOC DATA:", doc.data());
-    if(doc.exists){
-     alert("Oyuncu verisi bulunamadı. Lütfen tekrar kayıt olun.");
 
-    await auth.signOut();
-    return false;
+try{
+    const doc = await db.collection('players').doc(uid).get();
+
+    if(!doc.exists){
+        alert("Oyuncu verisi bulunamadı. Lütfen tekrar kayıt olun.");
+        await auth.signOut();
+        return false
 }
       const data = doc.data();
 
@@ -4733,20 +4732,17 @@ function updateOtherPlayersAndDrawHUD(){
 auth.onAuthStateChanged(async (user)=>{
 if(user){
     currentUser = user;
+    await loadProgressFromFirestore(user.uid);
 
-    const ok = await loadProgressFromFirestore(user.uid);
-
-    if(!ok){
-        alert("Oyuncu verisi bulunamadı. Lütfen tekrar giriş yapın veya yeniden kayıt olun.");
-        await auth.signOut();
-        return;
+    if(pendingRestoreRow !== null && pendingRestoreCol !== null && (pendingRestoreRow!==mapRow || pendingRestoreCol!==mapCol)){
+        loadMapWorldOnly(pendingRestoreRow, pendingRestoreCol);
     }
 
     if(pendingRestoreX !== null && pendingRestoreY !== null){
-      player.x = clamp(pendingRestoreX, 15, WORLD_W-15);
-      player.y = clamp(pendingRestoreY, 15, WORLD_H-15);
-      camTarget.x = player.x;
-      camTarget.z = player.y;
+        player.x = clamp(pendingRestoreX, 15, WORLD_W-15);
+        player.y = clamp(pendingRestoreY, 15, WORLD_H-15);
+        camTarget.x = player.x;
+        camTarget.z = player.y;
     }
 
     if(typeof renderHotbar === 'function') renderHotbar();
