@@ -4596,7 +4596,17 @@ function startMultiplayerSync(){
 function stopMultiplayerSync(){
   rtdb.ref(roomBase() + '/players').off();
   rtdb.ref(roomBase() + '/enemies').off();
-  if(myPlayerRef){ myPlayerRef.remove().catch(e=>console.error('RTDB silme hatası:', e)); myPlayerRef.off(); myPlayerRef = null; }
+  if(myPlayerRef){ 
+  myPlayerRef.update({
+    online: false,
+    ts: Date.now()
+  }).catch(e=>{
+    console.error('RTDB offline güncelleme hatası:', e);
+  });
+
+  myPlayerRef.off();
+  myPlayerRef = null;
+}
   otherPlayers = {};
   otherPlayersRender = {};
   sharedEnemyState = {};
