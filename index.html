@@ -4689,21 +4689,28 @@ function updateOtherPlayersAndDrawHUD(){
 }
 
 auth.onAuthStateChanged(async (user)=>{
+
+  console.log("========== AUTH CHANGED ==========");
+  console.log("UID:", user ? user.uid : null);
+  console.log("EMAIL:", user ? user.email : null);
+  console.log("currentUsername:", currentUsername);
+  console.log("==================================");
+
   if(user){
     currentUser = user;
     await loadProgressFromFirestore(user.uid);
-    // Kayıtlı harita, varsayılan (1/1, dünya merkezi) haritadan farklıysa,
-    // initGame() zaten kurduğu varsayılan dünyayı bırakıp kayıtlı haritayı
-    // yeniden kuruyoruz; sonra gemiyi tam kaydedilen konuma koyuyoruz —
-    // harita ortasına değil, kaldığın yere.
+
     if(pendingRestoreRow !== null && pendingRestoreCol !== null && (pendingRestoreRow!==mapRow || pendingRestoreCol!==mapCol)){
       loadMapWorldOnly(pendingRestoreRow, pendingRestoreCol);
     }
+
     if(pendingRestoreX !== null && pendingRestoreY !== null){
       player.x = clamp(pendingRestoreX, 15, WORLD_W-15);
       player.y = clamp(pendingRestoreY, 15, WORLD_H-15);
-      camTarget.x = player.x; camTarget.z = player.y;
+      camTarget.x = player.x;
+      camTarget.z = player.y;
     }
+
     if(typeof renderHotbar === 'function') renderHotbar();
     loadMyFleetId();
     checkMyAuctionWins();
